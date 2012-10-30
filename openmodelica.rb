@@ -18,6 +18,7 @@ class Openmodelica < Formula
   depends_on :autoconf
   depends_on 'dbus'
   depends_on 'sundials'
+  depends_on 'open-scene-graph'
 
   def patches
     DATA
@@ -33,7 +34,7 @@ class Openmodelica < Formula
     system "./configure", "--without-omniORB",
                           "--without-paradiseo",
                           "--prefix=#{prefix}",
-                          "--with-qwt=#{qwt}"
+                          "--with-qwt=#{include}"
     # system "cmake", ".", *std_cmake_args
     system "make"
     system "make install" # if this fails, try separate make/make install steps

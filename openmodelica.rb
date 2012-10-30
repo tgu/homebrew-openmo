@@ -6,7 +6,7 @@ require 'formula'
 class Openmodelica < Formula
   homepage 'https://www.openmodelica.org'
   url 'file:///Users/tgu/Documents/om.tar.gz'
-  sha1 '880ea460586aa4188400667cfd904984acf47bf0'
+  sha1 'd02922256bce07153a00bf9abce446a6132a8e89'
   head 'https://openmodelica.org/svn/OpenModelica/tags/OPENMODELICA_1_9_0_BETA', :using => :svn
   version '1'
 

@@ -6,11 +6,13 @@ require 'formula'
 class Openmodelica < Formula
   homepage 'https://www.openmodelica.org'
   url 'file:///Users/tgu/Documents/om.tar.gz'
-  sha1 'ddb0b3752e7aba2bd55d36b4646eef4af9aec7c0'
+  sha1 'a7ac43b8ad11f4dc013ead10fc32246a52d55a7c'
   head 'https://openmodelica.org/svn/OpenModelica/tags/OPENMODELICA_1_9_0_BETA', :using => :svn
-  version '1'
+  version '1.9.0beta2'
 
-  # depends_on 'cmake' => :build
+  option 'with-omedit', 'Install OMEdit'
+
+  depends_on 'cmake' => :build
   depends_on 'qt'
   depends_on 'qwt'
   depends_on 'rml-mmc'
@@ -19,6 +21,8 @@ class Openmodelica < Formula
   depends_on 'dbus'
   depends_on 'sundials'
   depends_on 'open-scene-graph'
+  depends_on 'gettext'
+  depends_on :x11
 
   def patches
     DATA
@@ -26,17 +30,23 @@ class Openmodelica < Formula
 
   def install
     ENV.j1  # if your formula's build system can't parallelize
-    
+
     lps = Formula.factory 'lp_solve'
     qwt = Formula.factory 'qwt'
+    gettext  = Formula.factory 'gettext'
+    ENV.append "LDFLAGS", "-L#{gettext.lib}  -L#{qwt.lib}"
+    ENV.append "CFLAGS",  "-I#{gettext.include} -I#{qwt.include}"
 
     system "autoconf"
-    system "./configure", "--without-omniORB",
+    system "./configure", "--with-omniORB",
                           "--without-paradiseo",
+                          "--disable-rml-trace",
+                          "--disable-modelica3d",
                           "--prefix=#{prefix}",
                           "--with-qwt=#{include}"
     # system "cmake", ".", *std_cmake_args
-    system "make"
+    system "make -j2"
+    system "make -j2 omedit"
     system "make install" # if this fails, try separate make/make install steps
   end
 
